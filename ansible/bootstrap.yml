@@ -9,3 +9,8 @@
         src: 'digital_ocean.ini'
         dest: './inventory/digital_ocean.ini'
       delegate_to: localhost
+    - name: create secrets.yml
+      template:
+        src: 'secrets.yml'
+        dest: './group_vars/all/secrets.yml'
+      delegate_to: localhost

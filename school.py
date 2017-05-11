@@ -23,10 +23,13 @@ def init(do_token, *args, **kwargs):
         'ansible-playbook', 'ansible/bootstrap.yml',
         '-e', '"do_token={}"'.format(do_token)
     ]
-    init_swarm = ['ansible-playbook', 'ansible/provision.swarm.yml']
-
+    init_swarm = [
+        'ansible-playbook',
+        'ansible/provision.swarm.yml'
+    ]
 
     cmds.append(init_local_setup)
+
     for cmd in cmds:
         click.echo(" ".join(cmd))
         call(cmd)
@@ -38,4 +41,7 @@ def test(name):
 @click.command()
 def cli(*args, **kwargs):
     click.echo(args)
+    init()
+
+if __name__ == '__main__':
     init()
