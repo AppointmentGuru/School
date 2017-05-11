@@ -1,0 +1,43 @@
+---
+- name: Create Swarm Nodes
+  digital_ocean:
+    api_token: "{{ digital_ocean_token }}"
+    command: droplet
+    ssh_key_ids: "{{ digital_ocean_ssh_key_ids }}"
+    name: "swarm-{{ swarm_name }}.{{ item }}.{{ swarm_region }}"
+    size_id: "{{ swarm_droplet_size }}"
+    region_id: "{{ swarm_region }}"
+    image_id: "{{ swarm_droplet_image }}"
+    private_networking: "{{ swarm_private_networking }}"
+    wait: yes
+    wait_timeout: 500
+    state: present
+    unique_name: true
+  register: swarm_drops
+  delegate_to: 127.0.0.1
+  with_sequence: count="{{ swarm_nodes | int }}"
+
+- name: Tag the resource
+  digital_ocean_tag:
+    api_token: "{{ digital_ocean_token }}"
+    name: "server_swarm"
+    resource_id: "{{ item.droplet.id }}"
+    state: present
+  delegate_to: 127.0.0.1
+  with_items: "{{ swarm_drops.results }}"
+
+- name: Tag the resource
+  digital_ocean_tag:
+    api_token: "{{ digital_ocean_token }}"
+    name: "server_swarm_{{ swarm_name }}"
+    resource_id: "{{ item.droplet.id }}"
+    state: present
+  delegate_to: 127.0.0.1
+  with_items: "{{ swarm_drops.results }}"
+
+- name: add host
+  add_host:
+    name: "{{ item.droplet.ip_address }}"
+    groups: "harden"
+  with_items: "{{ swarm_drops.results }}"
+  when: item.changed

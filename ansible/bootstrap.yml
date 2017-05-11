@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  vars:
+    - do_token:
+  tasks:
+    - debug: var=do_token
+    - name: create inventory.ini
+      template:
+        src: 'digital_ocean.ini'
+        dest: './inventory/digital_ocean.ini'
+      delegate_to: localhost
