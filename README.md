@@ -1,2 +1,7 @@
-# SwarmInTheSea
-Scaffold a Swarm on digital ocean and start deploying microservices like a boss
+# School
+
+<center>
+![Example flow](./logo.png)
+</center>
+
+> It's what you call a swarm in the sea
