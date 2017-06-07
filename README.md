@@ -15,34 +15,37 @@ Out the box you will get:
 * Kong API gateway
 * ..
 
+## Installation
+
+Run: `docker run appointmentguru/school`
+
+This initial command will create a docker-compose.yml file in the current directory. Now you will be able to run all commands through docker-compose.
+
+We recommend that you add the following to `~/.bash_profile` to save you some typing:
+
+```
+alias school="docker-compose run --rm school"
+```
+
+Note: from here down we assume you have the above command in your setup. If you haven't, you'll just need to type out: `docker-compose run --rm school` instead of `school` in the examples below:
 
 ## Usage
 
-In any directory, create the following docker-compose file:
+### Initialize a swarm:
 
 ```
-version: '3'
-services:
-  image: appointmentguru/school:latest
-  volumes: .:/code/swarm/custom
-```
-
-### Initialization:
-
-```
-docker-compose up -d
+school init  # currently this is school python school.py
 ```
 
 Will:
 
-* As you a few questions
+* Ask you a few questions
 * Create a swarm of the size you specify on DigitalOcean (using the credentials you specify)
 * Each node will be hardened/secured
 
 
 **Recommendation:**
 
-Add: `alias web="docker-compose run --rm school"` to `~/.bash_profile`, now you can run commands inside your container with:
 
 ```
 school {command}

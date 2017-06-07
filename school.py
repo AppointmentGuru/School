@@ -21,14 +21,17 @@ def init(do_token, *args, **kwargs):
     cmds = []
     init_local_setup = [
         'ansible-playbook', 'ansible/bootstrap.yml',
-        '-e', '"do_token={}"'.format(do_token)
+        '-e', 'do_token={}'.format(do_token)
     ]
     init_swarm = [
         'ansible-playbook',
-        'ansible/provision.swarm.yml'
+        'ansible/provision.swarm.yml',
+        '-i',
+        'ansible/inventory/digital_ocean.py'
     ]
 
     cmds.append(init_local_setup)
+    cmds.append(init_swarm)
 
     for cmd in cmds:
         click.echo(" ".join(cmd))

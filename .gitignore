@@ -91,3 +91,5 @@ ENV/
 ansible/inventory/digital_ocean.ini
 ansible/group_vals/all/secrets.yml
 ansible-digital_ocean.cache
+ansible/group_vars/all/secrets.yml
+.DS_Store

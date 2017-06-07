@@ -1,7 +1,12 @@
 ---
 - hosts: localhost
-  vars:
-    - do_token:
+  vars_prompt:
+    - name: do_token
+      prompt: What is your digital ocean token?
+      private: yes
+    - name: ansible_user
+      prompt: What username will you use to login to remote servers?
+      private: no
   tasks:
     - debug: var=do_token
     - name: create inventory.ini
@@ -14,3 +19,6 @@
         src: 'secrets.yml'
         dest: './group_vars/all/secrets.yml'
       delegate_to: localhost
+    - name: encrypt secrets
+      debug:
+        msg: 'todo'

@@ -1,0 +1,23 @@
+---
+version: '3'
+
+services:
+  vizualizer:
+    image: dockersamples/visualizer
+    networks:
+      - traefik_external
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - traefik.port=8080
+        - traefik.frontend.rule=Host:swarm.appointmentguru.co
+        - traefik.backend.loadbalancer.method=drr
+
+networks:
+  traefik_external:
+    external: true
