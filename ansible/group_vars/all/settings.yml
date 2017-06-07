@@ -1,0 +1,7 @@
+ssh_users:
+- username: adrian
+  full_name: Adrian Moisey
+  github_username: adrianmoisey
+- username: toast38coza
+  full_name: Christo Crampton
+  github_username: toast38coza

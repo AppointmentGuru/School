@@ -1,0 +1,8 @@
+version: "3"
+services:
+  whoami:
+    image: jwilder/whoami
+    ports:
+      - '8000:8000'
+    deploy:
+      replicas: 3

@@ -1,0 +1,26 @@
+---
+- hosts: server_swarm
+  vars:
+    version: latest
+    service: whoami
+    expose_ports:
+      - "8000:8000"
+  tasks:
+    - name: Ensure location exists
+      file:
+        path: /composes/
+        state: directory
+      become: yes
+    - name: Upload compose file
+      template:
+        src: "../swarm/docker-compose.{{service}}.{{version}}.yml"
+        dest: "/composes/docker-compose.{{service}}.{{version}}.yml"
+      become: yes
+    - name: Deploy
+      shell: "docker stack deploy -c /composes/docker-compose.{{service}}.{{version}}.yml {{service}}"
+      become: yes
+    - name: Expose ports if need be
+      shell: "docker service update --publish-add {{item}} {{service}}_{{service}}"
+      with_items: "{{expose_ports}}"
+      become: yes
+

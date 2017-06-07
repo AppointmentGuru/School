@@ -1,0 +1,13 @@
+---
+- name: Set the version
+  shell: 'npm version {{vueapp_version}}'
+  args:
+    chdir: "{{vueapp_path}}"
+- name: Build the app
+  shell: 'npm run build'
+  args:
+    chdir: "{{vueapp_path}}"
+- name: Create npm package
+  shell: 'npm pack {{vueapp_path}}'
+  args:
+    chdir: "{{vueapp_path}}"

@@ -1,0 +1,44 @@
+---
+version: '3'
+
+services:
+  proxy:
+    image: traefik
+    command:
+      - --configfile=/etc/traefik/traefik.toml
+      - --web
+      - --docker
+      - --docker.swarmmode
+      - --docker.domain=traefik
+      - --docker.watch
+      - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
+      - --entryPoints=Name:https Address::443 TLS
+      - --defaultEntryPoints=http,https
+      - --logLevel=DEBUG
+      - --acme.entryPoint=https
+      - --acme.email=admin@appointmentguru.co
+      - --acme.storage=/etc/traefik/acme/acme.json
+      - --acme.dnsProvider=cloudflare
+      - --acme.acmeLogging=true
+      - --acme.OnHostRule=true
+
+    networks:
+      - external
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/traefik/acme:/etc/traefik/acme
+    environment:
+      - CLOUDFLARE_EMAIL=christo@appointmentguru.co
+      - CLOUDFLARE_API_KEY=567ea3b28e03eacd3e08ce8a978e59cb45c27
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  external:

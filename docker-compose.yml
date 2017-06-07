@@ -1,0 +1,10 @@
+version: "3"
+services:
+  school:
+    build: .
+    volumes:
+      - .:/code
+      - ~/.ssh:/root/.ssh # map ssh keys
+    command: python school.py
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=False

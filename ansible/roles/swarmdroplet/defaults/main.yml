@@ -1,0 +1,5 @@
+---
+swarm_droplet_image: 25278440 # Docker 17.04.0-ce on 16.04
+swarm_droplet_size: 1gb
+swarm_private_networking: yes
+swarm_region: fra1

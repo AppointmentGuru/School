@@ -1,0 +1,52 @@
+---
+- name: Create buckets for domains
+  s3:
+    aws_access_key: '{{aws_access_key}}'
+    aws_secret_key: '{{aws_secret_key}}'
+    bucket: "{{staticwebsite_domain}}"
+    mode: create
+    region: "{{staticwebsite_region}}"
+    permission: public-read
+
+- name: Create websites
+  s3_website:
+    aws_access_key: '{{aws_access_key}}'
+    aws_secret_key: '{{aws_secret_key}}'
+    name: "{{staticwebsite_domain}}"
+    region: "{{staticwebsite_region}}"
+    suffix: index.html
+    state: present
+
+- name: Update files
+  s3_sync:
+    aws_access_key: '{{aws_access_key}}'
+    aws_secret_key: '{{aws_secret_key}}'
+    bucket: '{{staticwebsite_domain}}'
+    file_root: "{{path_to_index}}"
+    permission: public-read
+    region: "{{staticwebsite_region}}"
+    file_change_strategy: checksum
+
+- name: Create buckets for redirects
+  s3:
+    aws_access_key: '{{aws_access_key}}'
+    aws_secret_key: '{{aws_secret_key}}'
+    bucket: "{{item}}"
+    mode: create
+    region: "{{staticwebsite_region}}"
+    permission: public-read
+  with_items: "{{staticwebsite_redirect_domains}}"
+  tags:
+    - redirects
+
+- name: Setup redirects
+  s3_website:
+    aws_access_key: '{{aws_access_key}}'
+    aws_secret_key: '{{aws_secret_key}}'
+    name: "www.appointmentguru.co"
+    redirect_all_requests: "appointmentguru.co"
+    region: "{{staticwebsite_region}}"
+    state: present
+  with_items: "{{staticwebsite_redirect_domains}}"
+  tags:
+    - redirects
