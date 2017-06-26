@@ -9,7 +9,7 @@ services:
       - '5432:5432'
 
   kong:
-    image: kong:0.10.2
+    image: appointmentguru/kong-swarm:latest
     ports:
       - "8000:8000"
       - "8443:8443"
