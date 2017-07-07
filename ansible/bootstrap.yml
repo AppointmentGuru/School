@@ -8,7 +8,6 @@
       prompt: What username will you use to login to remote servers?
       private: no
   tasks:
-    - debug: var=do_token
     - name: create inventory.ini
       template:
         src: 'digital_ocean.ini'
