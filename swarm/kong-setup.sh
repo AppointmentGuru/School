@@ -14,10 +14,10 @@ curl -i -X POST \
   --data "username=$KONG_ADMIN_USER_NAME"
 
 curl -i -X POST \
-  --url http://kong:8001/consumers/admin/key-auth/ \
+  --url http://kong:8001/consumers/$KONG_ADMIN_USER_NAME/key-auth/ \
   --data 'key=$KONG_ADMIN_USER_TOKEN'
 
 curl -i -X GET \
-  --url http://165.227.141.208/manage/apis/ \
+  --url http://46.101.101.99/manage/api/ \
   --header "apikey: $KONG_ADMIN_USER_TOKEN"
 

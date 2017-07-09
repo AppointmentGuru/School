@@ -2,9 +2,11 @@
 - hosts: server_swarm
   vars:
     version: latest
+    docker_org: appointmentguru
+    docker_image: appointmentguru
     service: whoami
-    expose_ports:
-      - "8000:8000"
+    expose_ports: []
+    compose_path: '../swarm/custom/'
   tasks:
     - name: Ensure location exists
       file:
@@ -13,14 +15,16 @@
       become: yes
     - name: Upload compose file
       template:
-        src: "../swarm/docker-compose.{{service}}.{{version}}.yml"
+        src: "{{compose_path}}/docker-compose.{{service}}.{{version}}.yml"
         dest: "/composes/docker-compose.{{service}}.{{version}}.yml"
       become: yes
+    - name: Pull latest image
+      shell: "docker pull {{docker_org}}/{{docker_image}}:{{version}}"
+      become: yes
     - name: Deploy
-      shell: "docker stack deploy -c /composes/docker-compose.{{service}}.{{version}}.yml {{service}}"
+      shell: "docker stack deploy -c /composes/docker-compose.{{service}}.{{version}}.yml {{service}} --with-registry-auth"
       become: yes
     - name: Expose ports if need be
       shell: "docker service update --publish-add {{item}} {{service}}_{{service}}"
       with_items: "{{expose_ports}}"
       become: yes
-
