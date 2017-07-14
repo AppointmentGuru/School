@@ -1,0 +1,7 @@
+---
+docker_command: gunicorn {{docker_service}}.wsgi:application -b :80 --reload
+docker_replicas: 2
+docker_parallelism: 1
+docker_delay: 30s
+docker_expose_ports: []
+docker_environment: []

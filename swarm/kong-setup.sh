@@ -7,17 +7,16 @@ curl -i -X POST \
 
 curl -i -X POST \
   --url http://kong:8001/apis/kong-admin/plugins/ \
-  --data 'name=key-auth'
+  --data 'name=basic-auth'
 
 curl -i -X POST \
   --url http://kong:8001/consumers/ \
-  --data "username=$KONG_ADMIN_USER_NAME"
+  --data "username=appointmentguru"
 
-curl -i -X POST \
-  --url http://kong:8001/consumers/$KONG_ADMIN_USER_NAME/key-auth/ \
-  --data 'key=$KONG_ADMIN_USER_TOKEN'
+# curl -i -X POST \
+#   --url http://kong:8001/consumers/$KONG_ADMIN_USER_NAME/key-auth/ \
+#   --data 'key=4f6ae149-a6e1-45b7-8abc-dbf87f22e90b'
 
-curl -i -X GET \
-  --url http://46.101.101.99/manage/api/ \
-  --header "apikey: $KONG_ADMIN_USER_TOKEN"
-
+curl -X POST http://kong:8001/consumers/appointmentguru/basic-auth \
+    --data "username=appointmentguru" \
+    --data "password=4f6ae149-a6e1-45b7-8abc-dbf87f22e90b"

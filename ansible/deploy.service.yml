@@ -7,6 +7,8 @@
     service: whoami
     expose_ports: []
     compose_path: '../swarm/custom/'
+    postgres_user:
+    postgres_db:
   tasks:
     - name: Ensure location exists
       file:

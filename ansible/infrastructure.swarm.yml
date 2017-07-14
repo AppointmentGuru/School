@@ -22,6 +22,6 @@
     - name: Deploy
       shell: "docker stack deploy -c /composes/docker-compose.infrastructure.{{version}}.yml infrastructure"
       become: yes
-    - name: Expose ports if need be
+    - name: Expose ports for nginx
       shell: "docker service update --publish-add 80:80 infrastructure_proxy"
       become: yes

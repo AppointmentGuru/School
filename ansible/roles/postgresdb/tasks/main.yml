@@ -1,0 +1,20 @@
+---
+- name: Add user
+  postgresql_user:
+    name: "{{postgres_db_user}}"
+    password: "{{ postgres_db_password }}"
+    state: present
+    login_user: "{{postgres_admin_user}}"
+  become: yes
+  become_user: "{{postgres_admin_user}}"
+
+- name: Create database
+  postgresql_db:
+    name: "{{postgres_db_name}}"
+    owner: "{{ postgres_db_user }}"
+    template: "template0"
+    state: present
+    login_user: "{{postgres_admin_user}}"
+  become: yes
+  become_user: "{{postgres_admin_user}}"
+
