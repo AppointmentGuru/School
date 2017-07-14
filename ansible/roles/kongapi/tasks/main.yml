@@ -1,0 +1,27 @@
+---
+- name: Registry API with kong
+  kong_api:
+    kong_admin_uri: "{{kong_admin_base_url}}"
+    kong_admin_username: "{{kong_admin_username}}"
+    kong_admin_password: "{{kong_admin_password}}"
+    name: "{{docker_service}}"
+    upstream_url: "http://{{docker_service}}"
+    uris: "/{{docker_service}}"
+    state: present
+  when: kong_proxy
+  tags:
+    - kong
+
+- name: Add kong plugins
+  kong_plugin:
+    kong_admin_uri: "{{kong_admin_base_url}}"
+    kong_admin_username: "{{kong_admin_username}}"
+    kong_admin_password: "{{kong_admin_password}}"
+    api_name: "{{docker_service}}"
+    plugin_name: "{{item.name}}"
+    config: "{{ item.config }}"
+    state: present
+  with_items: "{{kong_plugins}}"
+  when: kong_proxy
+  tags:
+    - kong

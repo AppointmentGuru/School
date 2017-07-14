@@ -13,11 +13,11 @@ class KongPlugin:
         self.api = api_name
 
     def list(self):
-        
+
         return requests.get(self.base_url, auth=self.auth)
 
     def _get_plugin_id(self, name, plugins_list):
-        """Scans the list of plugins for an ID. 
+        """Scans the list of plugins for an ID.
         returns None if no matching name is found"""
 
         for plugin in plugins_list:
@@ -27,7 +27,7 @@ class KongPlugin:
         return None
 
     def add_or_update(self, name, config=None):
-        
+
         # does it exist already?
         plugins_response = self.list()
         plugins_list = plugins_response.json().get('data', [])
@@ -36,14 +36,15 @@ class KongPlugin:
             "name": name,
         }
         if config is not None:
-            data.update(config)   
+            data.update(config)
 
         plugin_id = self._get_plugin_id(name, plugins_list)
-        if plugin_id is None:            
+
+        if plugin_id is None:
             return requests.post(self.base_url, data, auth=self.auth)
         else:
             url = "{}/{}" . format (self.base_url, plugin_id)
-            return requests.patch(url, data, auth=self.auth)
+            return requests.put(url, data, auth=self.auth)
 
     def delete(self, id):
 
@@ -52,7 +53,7 @@ class KongPlugin:
 
 
 class ModuleHelper:
-    
+
     def get_module(self):
 
         args = dict(
@@ -63,7 +64,7 @@ class ModuleHelper:
             plugin_name = dict(required=False, type='str'),
             plugin_id = dict(required=False, type='str'),
             config = dict(required=False, type='dict'),
-            state = dict(required=False, default="present", choices=['present', 'absent', 'list'], type='str'),    
+            state = dict(required=False, default="present", choices=['present', 'absent', 'list'], type='str'),
         )
         return AnsibleModule(argument_spec=args,supports_check_mode=False)
 
@@ -72,10 +73,10 @@ class ModuleHelper:
         auth_user = module.params['kong_admin_username']
         auth_password = module.params['kong_admin_password']
         api_name = module.params['api_name']
-        state = module.params['state']    
+        state = module.params['state']
         data = {
-            "name": module.params['plugin_name'], 
-            "config": module.params['config']        
+            "name": module.params['plugin_name'],
+            "config": module.params['config']
         }
 
         return (url, api_name, data, state, auth_user, auth_password)
@@ -85,7 +86,7 @@ class ModuleHelper:
         if state == "present":
             meta = json.dumps(response.content)
             has_changed = response.status_code == 201
-            
+
         if state == "absent":
             meta = {}
             has_changed = response.status_code == 204
@@ -96,7 +97,7 @@ class ModuleHelper:
 
         return (has_changed, meta)
 
-    
+
 def main():
 
     state_to_method = {
@@ -132,4 +133,4 @@ from ansible.module_utils.basic import *
 from ansible.module_utils.urls import *
 
 if __name__ == '__main__':
-    main()        
+    main()
