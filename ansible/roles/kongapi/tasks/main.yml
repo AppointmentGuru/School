@@ -1,5 +1,5 @@
 ---
-- name: Registry API with kong
+- name: Register API with kong
   kong_api:
     kong_admin_uri: "{{kong_admin_base_url}}"
     kong_admin_username: "{{kong_admin_username}}"
