@@ -223,7 +223,7 @@ def main():
             major_minor_patch = latest_release.split('.')
             major_minor_patch[tag_index] = str(int(major_minor_patch[tag_index]) + 1)
             new_release = major_minor_patch[0:(tag_index+1)] + ['0' for x in major_minor_patch[(tag_index+1):]]
-            tag = ".".join(major_minor_patch)
+            tag = ".".join(new_release)
 
         release = repository.create_release(
             tag, target, name, body, draft, prerelease)
