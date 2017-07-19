@@ -1,0 +1,28 @@
+---
+- name: Check if our test exists
+  uri:
+    url: https://app.statuscake.com/API/Tests/?tags={{WebsiteName|lower}}
+    method: GET
+    status_code: 200
+    headers: "{{statuscake_headers}}"
+  register: tests_result
+  when: statuscake_token is defined
+- name: Update existing test
+  uri:
+    url: https://app.statuscake.com/API/Tests/Update
+    method: PUT
+    body: "TestID={{tests_result.json[0].TestID}}WebsiteName={{WebsiteName}}&WebsiteURL={{WebsiteURL}}&CheckRate={{CheckRate}}&TestTags={{WebsiteName}},{{TestTags}}"
+    status_code: 200
+    headers: "{{statuscake_headers}}"
+  when: statuscake_token is defined and tests_result.json|length == 1
+- name: Create a new test
+  uri:
+    url: https://app.statuscake.com/API/Tests/Update
+    method: PUT
+    body: "WebsiteName={{WebsiteName}}&WebsiteURL={{WebsiteURL}}&CheckRate={{CheckRate}}&TestTags={{WebsiteName|lower}},{{TestTags}}"
+    status_code: 200
+    headers: "{{statuscake_headers}}"
+  when: statuscake_token is defined and tests_result.json|length == 0
+
+
+

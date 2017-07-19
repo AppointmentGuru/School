@@ -9,6 +9,7 @@ ADD requirements.txt /code/
 RUN pip install -U pip
 RUN pip install -r requirements.txt
 
+
 COPY ./ansible/*.yml /code/ansible/
 COPY ./ansible/roles/ /etc/ansible/roles/
 COPY ./ansible/library/ /etc/ansible/library/

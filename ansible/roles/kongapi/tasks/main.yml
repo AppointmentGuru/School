@@ -1,27 +1,44 @@
 ---
-- name: Register API with kong
+- name: Remove unwanted apis
   kong_api:
     kong_admin_uri: "{{kong_admin_base_url}}"
     kong_admin_username: "{{kong_admin_username}}"
     kong_admin_password: "{{kong_admin_password}}"
-    name: "{{docker_service}}"
-    upstream_url: "http://{{docker_service}}"
-    uris: "/{{docker_service}}"
+    name: "{{item}}"
+    state: absent
+  with_items: "{{kong_deleted_apis}}"
+
+- name: Register API with kong via uri
+  kong_api:
+    kong_admin_uri: "{{kong_admin_base_url}}"
+    kong_admin_username: "{{kong_admin_username}}"
+    kong_admin_password: "{{kong_admin_password}}"
+    name: "{{kong_api.name}}"
+    upstream_url: "{{kong_api.upstream_url}}"
+    uris: "/{{kong_api.uris}}"
     state: present
-  when: kong_proxy
-  tags:
-    - kong
+  when: kong_proxy and kong_api.uris is defined
+
+- name: Register API with kong via host
+  kong_api:
+    kong_admin_uri: "{{kong_admin_base_url}}"
+    kong_admin_username: "{{kong_admin_username}}"
+    kong_admin_password: "{{kong_admin_password}}"
+    name: "{{kong_api.name}}"
+    upstream_url: "{{kong_api.upstream_url}}"
+    hosts: "{{kong_api.hosts}}"
+    preserve_host: yes
+    state: present
+  when: kong_proxy and kong_api.hosts is defined
 
 - name: Add kong plugins
   kong_plugin:
     kong_admin_uri: "{{kong_admin_base_url}}"
     kong_admin_username: "{{kong_admin_username}}"
     kong_admin_password: "{{kong_admin_password}}"
-    api_name: "{{docker_service}}"
+    api_name: "{{kong_api.name}}"
     plugin_name: "{{item.name}}"
     config: "{{ item.config }}"
     state: present
   with_items: "{{kong_plugins}}"
   when: kong_proxy
-  tags:
-    - kong

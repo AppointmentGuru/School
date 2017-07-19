@@ -1,0 +1,25 @@
+---
+- name: setup subdomains
+  cloudflare_dns:
+    zone: "{{dns_tld}}"
+    record: "{{item.subdomain}}"
+    type: A
+    value: "{{item.ip}}"
+    account_email: "{{cloudflare_email}}"
+    account_api_token: "{{cloudflare_token}}"
+    proxied: yes
+    state: present
+  with_items: "{{dns_subdomains}}"
+  when: cloudflare_token is defined
+
+- name: remove old subdomains
+  cloudflare_dns:
+    zone: "{{dns_tld}}"
+    record: "{{item.subdomain}}"
+    type: A
+    value: "{{item.ip}}"
+    account_email: "{{cloudflare_email}}"
+    account_api_token: "{{cloudflare_token}}"
+    state: absent
+  with_items: "{{removed_dns_subdomains}}"
+  when: cloudflare_token is defined

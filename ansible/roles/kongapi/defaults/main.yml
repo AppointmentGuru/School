@@ -1,2 +1,3 @@
 ---
-# defaults file for kongapi
+kong_proxy: true
+kong_deleted_apis: []

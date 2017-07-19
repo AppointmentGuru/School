@@ -8,3 +8,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - SYSLOG_STRUCTURED_DATA=logdna@48950
+    deploy:
+      mode: global
