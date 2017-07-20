@@ -132,13 +132,35 @@ latest_release:
     sample: 1.1.0
 '''
 
+RELEASE_SHORTCUTS = ['major', 'minor', 'patch']
+
 try:
     import github3
-
     HAS_GITHUB_API = True
 except ImportError:
     HAS_GITHUB_API = False
 from ansible.module_utils.basic import AnsibleModule, get_exception
+
+def get_repository(gh_obj, user, repo):
+    repo_explicitly_defined = len(repo.split('/')) == 2
+    if repo_explicitly_defined:
+        user_part, repo_part = repo.split('/')
+        return gh_obj.repository(user_part, repo_part)
+    else:
+        return gh_obj.repository(user, repo)
+
+def bump_version(latest_release, bump):
+    if isinstance(latest_release, github3.null.NullObject):
+        latest_tag = '0.0.0'
+    else:
+        latest_tag = latest_release.tag_name
+
+    # todo: handle non semver releases
+    tag_index = RELEASE_SHORTCUTS.index(bump)
+    major_minor_patch = latest_tag.split('.')
+    major_minor_patch[tag_index] = str(int(major_minor_patch[tag_index]) + 1)
+    new_release = major_minor_patch[0:(tag_index+1)] + ['0' for x in major_minor_patch[(tag_index+1):]]
+    return ".".join(new_release)
 
 
 def main():
@@ -194,7 +216,7 @@ def main():
                          details="Please check username and password or token "
                                  "for repository %s" % repo)
 
-    repository = gh_obj.repository(user, repo)
+    repository = get_repository(gh_obj, user, repo)
 
     if not repository:
         module.fail_json(msg="Repository %s/%s doesn't exist" % (user, repo))
@@ -212,18 +234,9 @@ def main():
             module.exit_json(
                 skipped=True, msg="Release for tag %s already exists." % tag)
 
-        release_shortcuts = ['major', 'minor', 'patch']
-        if tag in release_shortcuts:
+        if tag in RELEASE_SHORTCUTS:
             latest_release = repository.latest_release()
-            if isinstance(latest_release, github3.null.NullObject):
-                latest_tag = '0.0.0'
-            else:
-                latest_tag = latest_release.tag_name
-            tag_index = release_shortcuts.index(tag)
-            major_minor_patch = latest_release.split('.')
-            major_minor_patch[tag_index] = str(int(major_minor_patch[tag_index]) + 1)
-            new_release = major_minor_patch[0:(tag_index+1)] + ['0' for x in major_minor_patch[(tag_index+1):]]
-            tag = ".".join(new_release)
+            tag = bump_version(latest_release, tag)
 
         release = repository.create_release(
             tag, target, name, body, draft, prerelease)
