@@ -10,6 +10,8 @@ RUN pip install -U pip
 RUN pip install -r requirements.txt
 
 COPY ./ansible/*.yml /code/ansible/
+COPY ./scripts/*.py /code/scripts/
+COPY ./swarm/ /code/swarm/
 COPY ./ansible/roles/ /etc/ansible/roles/
 COPY ./ansible/inventory/digital_ocean.py /etc/ansible/inventory/digital_ocean.py
 COPY ./ansible/library/ /etc/ansible/library/

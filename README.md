@@ -8,9 +8,6 @@
 
 # Setup:
 
-Create the following docker compose:
-
-
 # Usage and commands:
 
 **Bootstrap your environment**
@@ -18,24 +15,83 @@ Create the following docker compose:
 Will create all the things you need to get started using School
 
 ```
-docker run --rm appointmentguru/school bootstrap
+mkdir -p MyProject/configs && cd MyProject
+docker run -it -v $(pwd)/configs:/code/configs --rm appointmentguru/school:baseline python scripts/bootstrap.py
 ```
+
+This will create some files at: `./configs/`. Have a look at these and fill out what you can.
+
+You _must_ provide:
+
+* `api_token` in digital_ocean.ini
+* at least one `digital_ocean_ssh_key_ids` in secrets.yml
+* `digital_ocean_token` in secrets.yml
+* `ansible_user` in secrets.yml (this will be your user on your computer (e.g.: `whoami`))
 
 **Create a swarm:**
 
 Will create a swarm in DigitalOcean
 
 ```
-docker run --rm appointmentguru/school swarmup
+docker run --rm -it \
+	-v ~/.ssh:/root/.ssh \
+	-v $(pwd)/configs/settings.yml:/code/ansible/group_vars/all/settings.yml \
+	-v $(pwd)/configs/secrets.yml:/code/ansible/group_vars/all/secrets.yml \
+	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
+	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
+	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
+	appointmentguru/\school:baseline \
+	ansible-playbook ansible/provision.swarm.yml -i /etc/ansible/inventory/digital_ocean.py
 ```
 
-**Setup a service (Django + Django Rest Framework):**
+Set up a MicroService infrastructure:
 
-Creates a standardized RESTful service with Django and Django Rest Framework. This service is immediately deployable to your School.
+(currently only Nginx -> Kong is supported)
 
 ```
-mkdir MyAwesomeMicroService && cd MyAwesomeMicroService
-docker run --rm appointmentguru/school serviceprepare
+docker run --rm -it \
+	-v ~/.ssh:/root/.ssh \
+	-v $(pwd)/configs/settings.yml:/code/ansible/group_vars/all/settings.yml \
+	-v $(pwd)/configs/secrets.yml:/code/ansible/group_vars/all/secrets.yml \
+	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
+	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
+	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
+	appointmentguru/\school:baseline \
+	ansible-playbook ansible/infrastructure.swarm.yml -i /etc/ansible/inventory/digital_ocean.py
+```
+
+**Deploy some services:**
+
+The following services are deployable via school:
+
+* logdna
+* vizualizer
+
+todo:
+
+* authservice for kong
+
+```
+docker run --rm -it \
+	-v ~/.ssh:/root/.ssh \
+	-v $(pwd)/configs/settings.yml:/code/ansible/group_vars/all/settings.yml \
+	-v $(pwd)/configs/secrets.yml:/code/ansible/group_vars/all/secrets.yml \
+	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
+	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
+	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
+	appointmentguru/\school:baseline \
+	ansible-playbook ansible/deploy.service.yml -i /etc/ansible/inventory/digital_ocean.py -e'service=vizualizer'
+```
+
+Replace `-e service=..` to deploy different services
+
+
+**Tools**
+
+**Kong dashboard for Kong is cool:**
+
+```
+docker run -d -p 8080:8080 pgbi/kong-dashboard:v2
 ```
 
 **Create a release:**
@@ -56,6 +112,17 @@ Will take your service to School :).
 docker run --rm appointmentguru/school deploy
 ```
 
+**Current setup required:**
+
+* Create a run script (run.sh)
+* Create a school play (school.play.yml)
+* Wire together with compose (docker-compose.school.yml)
+
+**Manual steps:**
+
+* Create docker cloud setup
+
+
 ## Recommended services:
 
 School works great with these services:
@@ -69,7 +136,7 @@ School works great with these services:
 
 ## Convention:
 
-Given the following variables: 
+Given the following variables:
 
 * organization: **acme**
 * canonical_tld: **acme.com**
@@ -83,7 +150,7 @@ Given the following variables:
 * Github Repo: `acme/UserService`
 * Docker Repo: `acme/userservice`
 
-The following will be made for you: 
+The following will be made for you:
 
 * Subdomain setup on CloudFlare: userservice.acme.com
 * Postgres db + access will be setup:
@@ -91,7 +158,7 @@ The following will be made for you:
   * user: `acme_userservice`
 * Deployed to swarm with service named: `userservice`
 * Proxied via Kong @: userservice.acme.com -> userservice:80 (internal network)
-* StatusCake test: 
+* StatusCake test:
   * name: UserService
   * tags: [userservice]
   * url: userservice.acme.com
@@ -102,21 +169,21 @@ For more details on configuration, please reference the individual roles.
 
 **Requirements**
 
-* Available on a url 
+* Available on a url
 * Deployed to a swarm - Zero downtime deploys
-* Healthcheck 
-* Images verified (tested) at build time 
+* Healthcheck
+* Images verified (tested) at build time
 * Deployment commands are grouped in a `run.sh` script
-* Deployed by release number 
-* Centralized logs 
+* Deployed by release number
+* Centralized logs
 * Proxied via API gateway
 * Connected to database server (if necessary)
   * Data is backed up, replicated, safe and secure
-* Required infrastructure contained in compose file (e.g.: workers, brokers etc) 
+* Required infrastructure contained in compose file (e.g.: workers, brokers etc)
 * ...
 
 **Nice to have**
 
-* Code coverage + code quality metrics over time (Codacy) 
+* Code coverage + code quality metrics over time (Codacy)
 * ..
 

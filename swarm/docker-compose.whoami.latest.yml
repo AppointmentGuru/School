@@ -1,8 +1,13 @@
 version: "3"
 services:
   whoami:
+    networks:
+      - kong
     image: jwilder/whoami
-    ports:
-      - '8000:8000'
     deploy:
       replicas: 3
+
+networks:
+  kong:
+    external:
+      name: infrastructure_internal

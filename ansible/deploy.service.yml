@@ -2,11 +2,8 @@
 - hosts: server_swarm
   vars:
     version: latest
-    docker_org: appointmentguru
-    docker_image: appointmentguru
-    service: whoami
     expose_ports: []
-    compose_path: '../swarm/custom/'
+    compose_path: '/code/swarm/'
     postgres_user:
     postgres_db:
   tasks:
@@ -19,9 +16,6 @@
       template:
         src: "{{compose_path}}/docker-compose.{{service}}.{{version}}.yml"
         dest: "/composes/docker-compose.{{service}}.{{version}}.yml"
-      become: yes
-    - name: Pull latest image
-      shell: "docker pull {{docker_org}}/{{docker_image}}:{{version}}"
       become: yes
     - name: Deploy
       shell: "docker stack deploy -c /composes/docker-compose.{{service}}.{{version}}.yml {{service}} --with-registry-auth"

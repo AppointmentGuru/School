@@ -149,6 +149,10 @@ def get_repository(gh_obj, user, repo):
     else:
         return gh_obj.repository(user, repo)
 
+def validate_release_format(latest_release):
+    # todo:
+    pass
+
 def bump_version(latest_release, bump):
     if isinstance(latest_release, github3.null.NullObject):
         latest_tag = '0.0.0'
@@ -236,6 +240,7 @@ def main():
 
         if tag in RELEASE_SHORTCUTS:
             latest_release = repository.latest_release()
+            validate_release_format(latest_release)
             tag = bump_version(latest_release, tag)
 
         release = repository.create_release(
