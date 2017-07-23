@@ -47,27 +47,10 @@
     docker_service: "{{service}}"
     docker_command: "sh /code/run.sh"
 
-    # Docker environment details for the service:
-    docker_environment:
-      - key: DEBUG
-        value: False
-      - key: DATABASE_NAME
-        value: "{{organization}}_{{service}}"
-      - key: DATABASE_USER
-        value: "{{organization}}_{{service}}"
-      - key: DATABASE_PASSWORD
-        value: "{{postgres_passwords[service]}}"
-      - key: DATABASE_HOST
-        value: "{{postgres_db_host}}"
-      - key: ALLOWED_HOSTS
-        value: "{{docker_service}},{{service}}.{{canonical_tld}}"
-      - key: AWS_STORAGE_BUCKET_NAME
-        value: media-appointmentguru
-      - key: AWS_ACCESS_KEY_ID
-        value: "{{aws_access_key}}"
-      - key: AWS_SECRET_ACCESS_KEY
-        value: "{{aws_secret_key}}"
-
+  pre_tasks:
+    - include_vars:
+      file: docker.production.environment.yml
+      name: docker_environment
 
   roles:
     - role: djangoapp

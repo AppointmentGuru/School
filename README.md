@@ -96,6 +96,17 @@ docker run --rm -it \
 docker run --rm appointmentguru/school:baseline ls /code/swarm/
 ```
 
+## Deploying apps to School
+
+**Prapare your app for deployment to schhol**
+
+```
+docker run --rm -it \
+	-v $(pwd):/code/app \
+	appointmentguru/school:baseline \
+	ansible-playbook ansible/gotoschool.yml
+```
+
 **Tools**
 
 **Kong dashboard for Kong is cool:**
