@@ -56,7 +56,7 @@ docker run --rm -it \
 	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
 	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
 	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
-	appointmentguru/\school:baseline \
+	appointmentguru/school:baseline \
 	ansible-playbook ansible/infrastructure.swarm.yml -i /etc/ansible/inventory/digital_ocean.py
 ```
 
@@ -79,12 +79,22 @@ docker run --rm -it \
 	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
 	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
 	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
-	appointmentguru/\school:baseline \
-	ansible-playbook ansible/deploy.service.yml -i /etc/ansible/inventory/digital_ocean.py -e'service=vizualizer'
+	appointmentguru/school:baseline \
+	ansible-playbook ansible/deploy.compose.yml -i /etc/ansible/inventory/digital_ocean.py -e'service=vizualizer'
 ```
 
-Replace `-e service=..` to deploy different services
+**todo:** This is updated to deploy a compose file from `/code/swarm/` inside the container.
 
+**Process:**
+
+1. Map your compose file into `/code/swarm` (`-v $(pwd)/my-compose.yml:/code/swarm/my.compose.yml`)
+1. Run the playbook. Specify your compose file and a service name (`-e compose=my.compose.yml`).
+
+**List compose files:**
+
+```
+docker run --rm appointmentguru/school:baseline ls /code/swarm/
+```
 
 **Tools**
 

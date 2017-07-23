@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  vars_prompt:
+    - name: school_app
+      prompt: What type of app is this? (currently we only support DRF - Django Rest Framework)
+      default: drf
+      private: no
+    - name: school_organization
+      prompt: What is the docker organization name
+      private: no
+    - name: school_service
+      prompt: "What is the name of this service (something like: userservice"
+      private: no
+    - name: school_entity
+      prompt: "What is the short name for this service? (e.g.: user)"
+      private: no
+  roles:
+    - startapp

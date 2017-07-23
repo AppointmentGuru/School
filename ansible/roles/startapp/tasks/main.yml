@@ -1,0 +1,3 @@
+---
+- include: drf.yml
+  when: school_app == 'drf'

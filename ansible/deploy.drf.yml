@@ -1,0 +1,82 @@
+---
+- hosts: service_postgres_master
+  vars:
+    - postgres_db_name: "{{organization}}_{{service}}"
+    - postgres_db_user: "{{organization}}_{{service}}"
+    - postgres_db_password: "{{postgres_passwords[service]}}"
+
+  roles:
+    - { role: postgresdb, tags: ['postgres'] }
+
+- hosts: localhost
+  vars:
+    dns_tld: "{{canonical_tld}}"
+    dns_subdomains:
+      - subdomain: "{{service}}"
+        ip: "{{swarm_ip}}"
+    kong_api:
+      name: "{{service}}"
+      upstream_url: "http://{{service}}:80"
+      hosts: "{{service}}.{{canonical_tld}}"
+    # kong_plugins:
+    # - name: cors
+    #   config: {}
+    # - name: rate-limiting
+    #   config:
+    #     config.second: 10
+    #     config.hour: 10000
+    # status:
+    WebsiteName: "{{entity_name}}"
+    WebsiteURL: "https://{{service}}.{{canonical_tld}}"
+    CheckRate: 300
+    TestTags: ''
+  roles:
+    - role: dns
+      tags: [dns]
+    - role: kongapi
+      tags: [kong]
+    - role: status
+      tags: [status]
+
+- hosts: server_swarm
+  vars:
+    # docker app setup:
+    # see: roles/djangoapp/defaults/main.yml for more:
+    docker_org: "{{organization}}"
+    docker_image: "{{service}}"
+    docker_service: "{{service}}"
+    docker_command: "sh /code/run.sh"
+
+    # Docker environment details for the service:
+    docker_environment:
+      - key: DEBUG
+        value: False
+      - key: DATABASE_NAME
+        value: "{{organization}}_{{service}}"
+      - key: DATABASE_USER
+        value: "{{organization}}_{{service}}"
+      - key: DATABASE_PASSWORD
+        value: "{{postgres_passwords[service]}}"
+      - key: DATABASE_HOST
+        value: "{{postgres_db_host}}"
+      - key: ALLOWED_HOSTS
+        value: "{{docker_service}},{{service}}.{{canonical_tld}}"
+      - key: AWS_STORAGE_BUCKET_NAME
+        value: media-appointmentguru
+      - key: AWS_ACCESS_KEY_ID
+        value: "{{aws_access_key}}"
+      - key: AWS_SECRET_ACCESS_KEY
+        value: "{{aws_secret_key}}"
+
+
+  roles:
+    - role: djangoapp
+      tags: [app, django, deploy]
+
+  post_tasks:
+    - name: Tell slack
+      slack:
+        token: '{{slack_token}}'
+        msg: 'Deployed: {{docker_service}} using image: {{docker_org}}/{{docker_image}}:{{docker_version}}. See: {{service}}.{{canonical_tld}}'
+      delegate_to: localhost
+      when: slack_token is defined

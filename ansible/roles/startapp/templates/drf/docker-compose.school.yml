@@ -1,0 +1,10 @@
+version: "3"
+services:
+  school:
+    image: {{school_infrastructure_image}}:{{school_version}}
+    volumes:
+      - ~/.ssh:/root/.ssh # map ssh keys
+    command: ansible-playbook /code/ansible/deploy.drf.yml  -i /etc/ansible/inventory/digital_ocean.py -e "organization={{school_organization}} service={{school_service}} entity_name={{school_entity}}"
+    environment:
+      - ANSIBLE_HOST_KEY_CHECKING=False
+      - ANSIBLE_LIBRARY=/etc/ansible/library
