@@ -1,6 +1,8 @@
-- hosts: localhost
+- hosts: server_swarm
   tasks:
-    - include_vars:
-        file: docker.production.environment.yml
-        name: docker_environment
-    - debug: var='docker_environment'
+    - command: "docker info --format '{%raw%}{{json .Swarm.ControlAvailable}}'{%endraw%}"
+      register: result
+      become: true
+    - debug: msg='Deploy on this host'
+      when: result.stdout == 'true'
+      run_once: true

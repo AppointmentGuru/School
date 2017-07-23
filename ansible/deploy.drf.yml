@@ -60,3 +60,4 @@
       delegate_to: localhost
       when: slack_token is defined
       tags: deploy
+      run_once: true

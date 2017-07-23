@@ -1,4 +1,8 @@
 ---
+- name: Is this a control machine
+  command: "docker info --format '{%raw%}{{json .Swarm.ControlAvailable}}'{%endraw%}"
+  register: docker_info_is_control
+  become: yes
 - name: Ensure location exists
   file:
     path: /composes/
@@ -23,10 +27,14 @@
 - name: Deploy
   shell: "docker stack deploy -c /composes/docker-compose.{{docker_service}}.{{docker_version}}.yml {{docker_service}} --with-registry-auth"
   become: yes
+  when: docker_info_is_control.stdout == 'true'
+  run_once: true
 - name: Expose ports if need be
   shell: "docker service update --publish-add {{item}} {{docker_service}}_{{docker_service}}"
   with_items: "{{docker_expose_ports}}"
   become: yes
+  when: docker_info_is_control.stdout == 'true'
+  run_once: true
 - name: log out dockerhub
   docker_login:
     username: "{{docker_registry_username}}"
