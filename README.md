@@ -16,7 +16,7 @@ Will create all the things you need to get started using School
 
 ```
 mkdir -p MyProject/configs && cd MyProject
-docker run -it -v $(pwd)/configs:/code/configs --rm appointmentguru/school:baseline python scripts/bootstrap.py
+docker run -it -v $(pwd)/configs:/code/configs --rm appointmentguru/school:latest python scripts/bootstrap.py
 ```
 
 This will create some files at: `./configs/`. Have a look at these and fill out what you can.
@@ -40,7 +40,7 @@ docker run --rm -it \
 	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
 	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
 	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
-	appointmentguru/\school:baseline \
+	appointmentguru/\school:latest \
 	ansible-playbook ansible/provision.swarm.yml -i /etc/ansible/inventory/digital_ocean.py
 ```
 
@@ -56,7 +56,7 @@ docker run --rm -it \
 	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
 	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
 	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
-	appointmentguru/school:baseline \
+	appointmentguru/school:latest \
 	ansible-playbook ansible/infrastructure.swarm.yml -i /etc/ansible/inventory/digital_ocean.py
 ```
 
@@ -79,7 +79,7 @@ docker run --rm -it \
 	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
 	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
 	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
-	appointmentguru/school:baseline \
+	appointmentguru/school:latest \
 	ansible-playbook ansible/deploy.compose.yml -i /etc/ansible/inventory/digital_ocean.py -e'service=vizualizer'
 ```
 
@@ -93,7 +93,7 @@ docker run --rm -it \
 **List compose files:**
 
 ```
-docker run --rm appointmentguru/school:baseline ls /code/swarm/
+docker run --rm appointmentguru/school:latest ls /code/swarm/
 ```
 
 ## Deploying apps to School
@@ -103,8 +103,14 @@ docker run --rm appointmentguru/school:baseline ls /code/swarm/
 ```
 docker run --rm -it \
 	-v $(pwd):/code/app \
-	appointmentguru/school:baseline \
+	appointmentguru/school:latest \
 	ansible-playbook ansible/gotoschool.yml
+```
+
+**Deploy your app**
+
+```
+docker-compose -f docker-compose.school.yml up
 ```
 
 **Tools**

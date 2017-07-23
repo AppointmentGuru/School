@@ -1,3 +1,5 @@
 ---
 kong_proxy: true
+kong_api: {}
+kong_plugins: []
 kong_deleted_apis: []

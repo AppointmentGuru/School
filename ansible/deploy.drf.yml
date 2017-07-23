@@ -18,6 +18,7 @@
       name: "{{service}}"
       upstream_url: "http://{{service}}:80"
       hosts: "{{service}}.{{canonical_tld}}"
+    kong_plugins: []
     # kong_plugins:
     # - name: cors
     #   config: {}
@@ -47,11 +48,6 @@
     docker_service: "{{service}}"
     docker_command: "sh /code/run.sh"
 
-  pre_tasks:
-    - include_vars:
-      file: docker.production.environment.yml
-      name: docker_environment
-
   roles:
     - role: djangoapp
       tags: [app, django, deploy]
@@ -63,3 +59,4 @@
         msg: 'Deployed: {{docker_service}} using image: {{docker_org}}/{{docker_image}}:{{docker_version}}. See: {{service}}.{{canonical_tld}}'
       delegate_to: localhost
       when: slack_token is defined
+      tags: deploy
