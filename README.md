@@ -98,7 +98,7 @@ docker run --rm appointmentguru/school:latest ls /code/swarm/
 
 ## Deploying apps to School
 
-**Prapare your app for deployment to schhol**
+**Prapare your app for deployment to school**
 
 ```
 docker run --rm -it \
@@ -112,6 +112,13 @@ docker run --rm -it \
 ```
 docker-compose -f docker-compose.school.yml up
 ```
+
+**Notes:**
+
+* You can customize the docker environment files by mapping in your settings. Mount a volume: `- ./production.vars.yml:/code/ansible/group_vars/server_swarm.yml`
+* You can customize your deployment playbook by overwriting `/code/ansible/deploy.drf.yml` in the same manner.
+
+To quickly view a file: `docker-compose -f docker-compose.school.yml run --rm school cat /path/to/file.extension`
 
 **Tools**
 

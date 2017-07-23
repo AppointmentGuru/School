@@ -97,3 +97,4 @@ swarm/custom
 ansible/gateway.yml
 *.retry
 ansible/example.deploy.service.yml
+.DS_Store
