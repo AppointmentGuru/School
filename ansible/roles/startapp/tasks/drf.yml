@@ -1,0 +1,15 @@
+---
+- name: Make sure location exists
+  file:
+    path: /code/app
+    state: directory
+- name: Copy files to host
+  template:
+    src: "{{school_app}}/{{item}}"
+    dest: "/code/app/{{item}}"
+  with_items:
+    - custom_settings.py
+    - docker-compose.school.yml
+    - docker-compose.test.yml
+    - run.sh
+    - test.sh

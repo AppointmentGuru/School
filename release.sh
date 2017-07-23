@@ -6,7 +6,6 @@ echo    # (optional) move to a new line
 
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-  npm run build
-  docker build --no-cache=true -t appointmentguru/school:${1:-$branch} .
+  docker build -t appointmentguru/school:${1:-$branch} .
   docker push appointmentguru/school:${1:-$branch}
 fi

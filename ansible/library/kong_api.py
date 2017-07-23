@@ -39,27 +39,35 @@ class KongAPI:
         return "{}{}" . format (self.base_url, path)
 
     def _api_exists(self, name, api_list):
+        exists = False
+        data = None
         for api in api_list:
             if name == api.get("name", None):
-                return True
-        return False
+                exists = True
+                data = api
+
+        return (exists, api)
 
     def add_or_update(self, name, upstream_url, request_host=None, hosts=None, request_path=None, uris=None, strip_uri=True, strip_request_path=False, preserve_host=False):
 
         method = "post"
         url = self.__url("/apis/")
         api_list = self.list().json().get("data", [])
-        api_exists = self._api_exists(name, api_list)
-
-        if api_exists:
-            method = "patch"
-            url = "{}{}" . format (url, name)
+        api_exists, current_api_data = self._api_exists(name, api_list)
 
         data = {
             "name": name,
             "upstream_url": upstream_url,
             "preserve_host": preserve_host
         }
+
+        if api_exists:
+            method = "put"
+            id = current_api_data.get('id')
+            # url = "{}{}" . format (url, id)
+            data['id'] = id
+            data['created_at'] = current_api_data.get('created_at')
+
         if uris is not None:
             data['uris'] = uris
             data["strip_uri"] = strip_uri,
@@ -72,8 +80,6 @@ class KongAPI:
         if request_path is not None:
             data['request_path'] = request_path
             data["strip_request_path"] = strip_request_path,
-
-        # print(data)
 
         return getattr(requests, method)(url, data, auth=self.auth)
 

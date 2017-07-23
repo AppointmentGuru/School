@@ -11,10 +11,11 @@
   become: yes
 - name: login to dockerhub
   docker_login:
-    username: toast38coza
-    password: budry0kibri
-    email: christo@appointmentguru.co
+    username: "{{docker_registry_username}}"
+    password: "{{docker_registry_password}}"
+    email: "{{docker_registry_email}}"
     state: present
+  when: docker_registry_password is defined
   become: yes
 - name: Pull latest image
   shell: "docker pull {{docker_org}}/{{docker_image}}:{{docker_version}}"
@@ -28,8 +29,9 @@
   become: yes
 - name: log out dockerhub
   docker_login:
-    username: toast38coza
-    password: budry0kibri
-    email: christo@appointmentguru.co
+    username: "{{docker_registry_username}}"
+    password: "{{docker_registry_password}}"
+    email: "{{docker_registry_email}}"
     state: absent
+  when: docker_registry_password is defined
   become: yes

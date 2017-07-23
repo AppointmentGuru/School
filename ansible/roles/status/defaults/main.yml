@@ -1,0 +1,5 @@
+---
+statuscake_headers:
+  Content-Type: "application/x-www-form-urlencoded"
+  API: "{{statuscake_token}}"
+  Username: "{{statuscake_username}}"

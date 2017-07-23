@@ -2,26 +2,5 @@
 - hosts: server_swarm
   vars:
     version: latest
-  tasks:
-    - name: Ensure location exists
-      file:
-        path: /composes/files/nginx/
-        state: directory
-      become: yes
-      become: yes
-    - name: Upload compose file
-      template:
-        src: "../swarm/docker-compose.infrastructure.{{version}}.yml"
-        dest: "/composes/docker-compose.infrastructure.{{version}}.yml"
-      become: yes
-    - name: upload conf file for nginx
-      template:
-        src: 'proxy_default.conf'
-        dest: '/composes/files/nginx/default.conf'
-      become: yes
-    - name: Deploy
-      shell: "docker stack deploy -c /composes/docker-compose.infrastructure.{{version}}.yml infrastructure"
-      become: yes
-    - name: Expose ports for nginx
-      shell: "docker service update --publish-add 80:80 infrastructure_proxy"
-      become: yes
+  roles:
+    - infrastructure

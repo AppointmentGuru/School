@@ -35,9 +35,10 @@
   become: yes
   become_method: sudo
   hosts:
-  - server_swarm_production
+  - server_swarm
   vars:
       swarm_name: production
       swarm_nodes: 4
   roles:
     - role: swarm
+      tags: ['install_swarm']

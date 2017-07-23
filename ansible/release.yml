@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  vars:
+    tag: major
+  tasks:
+  - name: Create a new release
+    github_release:
+      user: "{{github_user}}"
+      password: "{{github_password}}"
+      repo: AppointmentGuru/School
+      action: create_release
+      tag: "{{tag}}"
+      target: master
+      name: Baseline release
+      body: Testing creating releases with magic

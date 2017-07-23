@@ -16,4 +16,3 @@ curl -i -X POST \
 curl -X POST http://kong:8001/consumers/.../basic-auth \
     --data "username=..." \
     --data "password=.."
-

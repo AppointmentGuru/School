@@ -1,0 +1,4 @@
+---
+school_version: latest
+school_infrastructure_image: appointmentguru/school
+school_port: 80

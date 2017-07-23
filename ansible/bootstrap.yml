@@ -7,17 +7,5 @@
     - name: ansible_user
       prompt: What username will you use to login to remote servers?
       private: no
-  tasks:
-    - name: create inventory.ini
-      template:
-        src: 'digital_ocean.ini'
-        dest: './inventory/digital_ocean.ini'
-      delegate_to: localhost
-    - name: create secrets.yml
-      template:
-        src: 'secrets.yml'
-        dest: './group_vars/all/secrets.yml'
-      delegate_to: localhost
-    - name: encrypt secrets
-      debug:
-        msg: 'todo'
+  roles:
+    - bootstrap

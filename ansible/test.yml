@@ -1,0 +1,7 @@
+- hosts: localhost
+  vars:
+    - dict:
+        key: value
+      key: key
+  tasks:
+    - debug: var='dict[key]'

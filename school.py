@@ -1,18 +1,6 @@
 import click, sys
 from subprocess import call
 
-@click.group()
-def app():
-    pass
-
-@click.group()
-def service():
-    pass
-
-@click.command()
-def release():
-    print ('create a release')
-
 @click.command()
 @click.option('--do-token', prompt='Your digitalocean token',
               help='Your digital ocean API token.')
