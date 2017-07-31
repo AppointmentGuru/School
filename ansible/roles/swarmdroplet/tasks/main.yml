@@ -13,6 +13,18 @@
     wait_timeout: 500
     state: present
     unique_name: true
+    user_data: >
+      users:
+        - name: adrian
+          ssh-authorized-keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDf84YbzttHbW4NppMfRvMccKXZpK2pGd3180+jwGRI0tQU3oWC64gyYQqGs4LY7O60bawDule/owUE58vreUJ4+FxpcfW/+0gxubaTAYS772l5NT2qL+1ckT3brkXOqyHzb/5HfdTW9Xflb0BX6cDVd7zvrNtIktUJt4+67sMW5x/lHhGv16Tnev29qfSsVe7Erw7kKRzS4uIxetebhawFG/mZ0cnuEwD2Q1tU2Bs/WsT9JICD4p/c88XpBSydZlYgytcq8X+Cw9Y/jCYbbNdsZiqpgF8qJqrs1My16bv1AUpGwpQf1DiPJnkZQq/s8OrvSeuASSkfV53Goazu7OIb adrian@wario.local
+          sudo: ['ALL=(ALL) NOPASSWD:ALL']
+        - name: toast38coza
+          ssh-authorized-keys:
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9IX7tqK7j3CQ31t+pjXzT7dr2bePn3/FiADjEXfTh8mBq+EkoSnIM1jqv0EX1jslrPEb+m1bijFIQABzNRHkzISxXAQ9naUxLewJy57wSDBw8DdnF33Is1oshG/vahCvIpt37g/DiJiu56d9r2x7cWaX4Y5d83TtDoDz9YIBNNcv8MtlkBh1XYvm0I2UL/KHCFIsmkQW+6fgg4wSi3icVmeLR8IiJeJ0cDFVy9+TilXGuOve/r8ghnOTeVxp2qlxG1kOMraP9/ngv7QZlbU4nvCL8CrtWWgoV8gz2YU2iCzR7Ns+OmF3s3n1UCZymDYyhnas/KwDLEvgo0cnGsLqH
+            - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4xgPXgdR2SiSONIo458C1QdrkdkYu0GYvbP0m5Us770AFo9a62dua7g0cDEnlVh3wXH9PrVKmEp5liHCXrqY3iZ4PaGpRm1v2cPHdep/D5plxMUS25fmRApuGP/qmof1JdYXrAkaiM025C5xnSYrMTwycr4l+Ept+COCm4XEqXYGB9B6zYQyGGwJRfipMYgaLIDyisyvkFwaIybteR+IszoAz3PkfRm4L5SLyAtW5fxw+KRJraSHdGbfgEpbMddi/XmQ2vILU8SXjPQ00kqBadcoX2kVyg8Z7Wy5xZNFylKdJXYUkF+wixYeqMzTB2/E/H1ACcZH+UMQFm8kCvnkD
+          sudo: ['ALL=(ALL) NOPASSWD:ALL']
+
   register: swarm_drops
   delegate_to: 127.0.0.1
   with_sequence: count="{{ swarm_nodes | int }}"
