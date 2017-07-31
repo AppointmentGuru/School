@@ -22,7 +22,6 @@
   roles:
     - role: securedroplet
       ansible_user: root
-      users: "{{ ssh_users }}"
       server_type: "swarm"
 
 - name: Refresh inventory

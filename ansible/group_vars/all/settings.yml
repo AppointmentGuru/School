@@ -1,11 +1,3 @@
-ssh_users:
-- username: adrian
-  full_name: Adrian Moisey
-  github_username: adrianmoisey
-- username: toast38coza
-  full_name: Christo Crampton
-  github_username: toast38coza
-
 postgres_db_host: 10.135.55.211
 swarm_ip: 46.101.71.132
 canonical_tld: appointmentguru.co

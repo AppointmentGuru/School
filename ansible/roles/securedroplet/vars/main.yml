@@ -1,5 +1,4 @@
 ---
-users: []
 securedroplet_servertypes:
   web:
     services:
