@@ -21,7 +21,8 @@ services:
 {% for var in docker_environment %}
       - {{var.key}}={{var.value}}
 {% endfor %}
-      - BUCKET_NAME=dbbackups.{{docker_org}}
+      - BUCKET_NAME={{aws_backups_bucket}}
+      - AWS_DEFAULT_REGION={{aws_region}}
 {% endif %}
 networks:
   kong:

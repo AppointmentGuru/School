@@ -47,6 +47,8 @@
     docker_image: "{{service}}"
     docker_service: "{{service}}"
     docker_command: "sh /code/run.sh"
+    aws_region: 'eu-central-1'
+    aws_backups_bucket: 'dbbackups.{{organization}}'
 
   roles:
     - role: djangoapp
