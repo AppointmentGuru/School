@@ -1,7 +1,9 @@
 ansible==2.3.0.0
 dopy==0.3.7a
 github3.py==1.0.0a3
+boto==2.38.0
+boto3==1.4.4
+botocore==1.5.87
 docker-py
 click
-boto3
 python-dateutil

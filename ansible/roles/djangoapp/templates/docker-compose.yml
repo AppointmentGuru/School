@@ -12,11 +12,16 @@ services:
         update_config:
           parallelism: {{docker_parallelism}}
           delay: {{docker_delay}}
+  {{docker_service}}_backup:
+    image: appointmentguru/pgbackups
+    networks:
+      - kong
 {% if docker_environment|length > 0 %}
     environment:
 {% for var in docker_environment %}
       - {{var.key}}={{var.value}}
 {% endfor %}
+      - BUCKET_NAME=dbbackups.{{docker_org}}
 {% endif %}
 networks:
   kong:

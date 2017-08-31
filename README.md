@@ -221,3 +221,19 @@ For more details on configuration, please reference the individual roles.
 * Code coverage + code quality metrics over time (Codacy)
 * ..
 
+
+### Swarm management commands:
+
+**Get the command to join as a manager**
+```
+ansible server_swarm -a "sudo docker swarm join-token manager" -i inventory/digital_ocean.py
+```
+
+**Run this command on a subset of servers**
+
+```
+ansible server_swarm -a "sudo docker swarm join --token .. 1.2.3.4:2377"
+```
+
+
+
