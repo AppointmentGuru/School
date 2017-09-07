@@ -46,7 +46,7 @@ class KongAPI:
                 exists = True
                 data = api
 
-        return (exists, api)
+        return (exists, data)
 
     def add_or_update(self, name, upstream_url, request_host=None, hosts=None, request_path=None, uris=None, strip_uri=True, strip_request_path=False, preserve_host=False):
 
