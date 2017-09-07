@@ -19,12 +19,13 @@ services:
 {% endfor %}
   {{docker_service}}_backup:
     image: appointmentguru/pgbackups
+    command: sh /backup.sh
     networks:
       - kong
     deploy:
       restart_policy:
         condition: any
-        max_attempts: 0
+        delay: 12h
     environment:
       - BUCKET_NAME={{aws_backups_bucket}}
       - AWS_DEFAULT_REGION={{aws_region}}
