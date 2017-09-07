@@ -12,7 +12,7 @@ services:
         update_config:
           parallelism: {{docker_parallelism}}
           delay: {{docker_delay}}
-    {% if docker_environment|length > 0 %}
+{% if docker_environment|length > 0 %}
     environment:
 {% for var in docker_environment %}
       - {{var.key}}={{var.value}}
@@ -28,6 +28,8 @@ services:
     environment:
       - BUCKET_NAME={{aws_backups_bucket}}
       - AWS_DEFAULT_REGION={{aws_region}}
+      - AWS_ACCESS_KEY_ID={{aws_access_key}}
+      - AWS_SECRET_ACCESS_KEY="{{aws_secret_key}}
       - PGDATABASE={{organization}}_{{service}}
       - PGUSER={{organization}}_{{service}}
       - PGHOST={{postgres_db_host}}
