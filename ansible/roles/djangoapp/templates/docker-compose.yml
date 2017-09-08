@@ -30,7 +30,7 @@ services:
       - BUCKET_NAME={{aws_backups_bucket}}
       - AWS_DEFAULT_REGION={{aws_region}}
       - AWS_ACCESS_KEY_ID={{aws_access_key}}
-      - AWS_SECRET_ACCESS_KEY="{{aws_secret_key}}
+      - AWS_SECRET_ACCESS_KEY={{aws_secret_key}}
       - PGDATABASE={{organization}}_{{service}}
       - PGUSER={{organization}}_{{service}}
       - PGHOST={{postgres_db_host}}
