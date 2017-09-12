@@ -1,9 +1,19 @@
 ---
+- name: Setup SSH key
+  digital_ocean:
+    state: present
+    command: ssh
+    name: ssh_key
+    ssh_pub_key: lookup('file', '/root/.ssh/id_rsa.pub' )
+  register: ssh_key_id
+
+
 - name: Create Swarm Nodes
   digital_ocean:
     api_token: "{{ digital_ocean_token }}"
     command: droplet
-    ssh_key_ids: "{{ digital_ocean_ssh_key_ids }}"
+    ssh_key_ids:
+      - "{{ ssh_key_id }}"
     name: "swarm-{{ swarm_name }}.{{ item }}.{{ swarm_region }}"
     size_id: "{{ swarm_droplet_size }}"
     region_id: "{{ swarm_region }}"
