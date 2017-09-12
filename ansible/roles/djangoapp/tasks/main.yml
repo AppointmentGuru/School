@@ -21,7 +21,6 @@
     state: present
   when: docker_registry_password is defined
   become: yes
-  delegate_to: "{{groups.server_swarm_manager[0]}}"
 
 - name: Pull latest image
   shell: "docker pull {{docker_org}}/{{docker_image}}:{{docker_version}}"
@@ -46,4 +45,3 @@
     state: absent
   when: docker_registry_password is defined
   become: yes
-  delegate_to: "{{groups.server_swarm_manager[0]}}"
