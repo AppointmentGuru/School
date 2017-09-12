@@ -3,6 +3,7 @@
     - command: "docker info --format '{%raw%}{{json .Swarm.ControlAvailable}}'{%endraw%}"
       register: result
       become: true
-    - debug: msg='Deploy on this host'
+    - debug: msg='Add tag manager'
       when: result.stdout == 'true'
-      run_once: true
+    - debug: msg='Remove tag manager'
+      when: result.stdout != 'true'

@@ -1,8 +1,8 @@
 ---
-- name: Is this a control machine
-  command: "docker info --format '{%raw%}{{json .Swarm.ControlAvailable}}'{%endraw%}"
-  register: docker_info_is_control
-  become: yes
+# - name: Is this a control machine
+#   command: "docker info --format '{%raw%}{{json .Swarm.ControlAvailable}}'{%endraw%}"
+#   register: docker_info_is_control
+#   become: yes
 - name: Ensure location exists
   file:
     path: /composes/
@@ -19,6 +19,7 @@
     password: "{{docker_registry_password}}"
     email: "{{docker_registry_email}}"
     state: present
+  delegate_to: server_swarm_manager
   when: docker_registry_password is defined
   become: yes
 - name: Pull latest image
@@ -27,13 +28,13 @@
 - name: Deploy
   shell: "docker stack deploy -c /composes/docker-compose.{{docker_service}}.{{docker_version}}.yml {{docker_service}} --with-registry-auth"
   become: yes
-  when: docker_info_is_control.stdout == 'true'
+  when: server_swarm_manager
   run_once: true
 - name: Expose ports if need be
   shell: "docker service update --publish-add {{item}} {{docker_service}}_{{docker_service}}"
   with_items: "{{docker_expose_ports}}"
   become: yes
-  when: docker_info_is_control.stdout == 'true'
+  delegate_to: server_swarm_manager
   run_once: true
 - name: log out dockerhub
   docker_login:
@@ -41,5 +42,6 @@
     password: "{{docker_registry_password}}"
     email: "{{docker_registry_email}}"
     state: absent
+  delegate_to: server_swarm_manager
   when: docker_registry_password is defined
   become: yes
