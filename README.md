@@ -73,14 +73,14 @@ todo:
 
 ```
 docker run --rm -it \
-	-v ~/.ssh:/root/.ssh \
-	-v $(pwd)/configs/settings.yml:/code/ansible/group_vars/all/settings.yml \
-	-v $(pwd)/configs/secrets.yml:/code/ansible/group_vars/all/secrets.yml \
-	-v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
-	-e "ANSIBLE_HOST_KEY_CHECKING=False" \
-	-e "ANSIBLE_LIBRARY=/etc/ansible/library" \
-	appointmentguru/school:latest \
-	ansible-playbook ansible/deploy.compose.yml -i /etc/ansible/inventory/digital_ocean.py -e'service=vizualizer'
+    -v ~/.ssh:/root/.ssh \
+    -v $(pwd)/configs/settings.yml:/code/ansible/group_vars/all/settings.yml \
+    -v $(pwd)/configs/secrets.yml:/code/ansible/group_vars/all/secrets.yml \
+    -v $(pwd)/configs/digital_ocean.ini:/etc/ansible/inventory/digital_ocean.ini \
+    -e "ANSIBLE_HOST_KEY_CHECKING=False" \
+    -e "ANSIBLE_LIBRARY=/etc/ansible/library" \
+    appointmentguru/school:latest \
+    ansible-playbook ansible/deploy.compose.yml -i /etc/ansible/inventory/digital_ocean.py -e'service=vizualizer'
 ```
 
 **todo:** This is updated to deploy a compose file from `/code/swarm/` inside the container.
@@ -102,9 +102,9 @@ docker run --rm appointmentguru/school:latest ls /code/swarm/
 
 ```
 docker run --rm -it \
-	-v $(pwd):/code/app \
-	appointmentguru/school:latest \
-	ansible-playbook ansible/gotoschool.yml
+    -v $(pwd):/code/app \
+    appointmentguru/school:latest \
+    ansible-playbook ansible/gotoschool.yml
 ```
 
 **Deploy your app**
