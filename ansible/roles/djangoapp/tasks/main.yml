@@ -29,12 +29,14 @@
 - name: Deploy
   shell: "docker stack deploy -c /composes/docker-compose.{{docker_service}}.{{docker_version}}.yml {{docker_service}} --with-registry-auth"
   become: yes
+  run_once: yes
   delegate_to: "{{groups.server_swarm_manager[0]}}"
 
 - name: Expose ports if need be
   shell: "docker service update --publish-add {{item}} {{docker_service}}_{{docker_service}}"
   with_items: "{{docker_expose_ports}}"
   become: yes
+  run_once: yes
   delegate_to: "{{groups.server_swarm_manager[0]}}"
 
 - name: log out dockerhub
