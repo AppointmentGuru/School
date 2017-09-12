@@ -19,29 +19,32 @@
     password: "{{docker_registry_password}}"
     email: "{{docker_registry_email}}"
     state: present
-  delegate_to: server_swarm_manager
   when: docker_registry_password is defined
   become: yes
+  delegate_to: "{{groups.server_swarm_manager[0]}}"
+
 - name: Pull latest image
   shell: "docker pull {{docker_org}}/{{docker_image}}:{{docker_version}}"
   become: yes
+
 - name: Deploy
   shell: "docker stack deploy -c /composes/docker-compose.{{docker_service}}.{{docker_version}}.yml {{docker_service}} --with-registry-auth"
   become: yes
   when: server_swarm_manager
-  run_once: true
+  delegate_to: "{{groups.server_swarm_manager[0]}}"
+
 - name: Expose ports if need be
   shell: "docker service update --publish-add {{item}} {{docker_service}}_{{docker_service}}"
   with_items: "{{docker_expose_ports}}"
   become: yes
-  delegate_to: server_swarm_manager
-  run_once: true
+  delegate_to: "{{groups.server_swarm_manager[0]}}"
+
 - name: log out dockerhub
   docker_login:
     username: "{{docker_registry_username}}"
     password: "{{docker_registry_password}}"
     email: "{{docker_registry_email}}"
     state: absent
-  delegate_to: server_swarm_manager
   when: docker_registry_password is defined
   become: yes
+  delegate_to: "{{groups.server_swarm_manager[0]}}"
