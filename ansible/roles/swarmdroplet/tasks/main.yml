@@ -1,9 +1,18 @@
 ---
+
+- name: Get ssh ssh keys
+  uri:
+    url: https://api.digitalocean.com/v2/account/keys
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Bearer {{digital_ocean_token}}"
+  register: ssh_keys
+
 - name: Create Swarm Nodes
   digital_ocean:
     api_token: "{{ digital_ocean_token }}"
     command: droplet
-    ssh_key_ids: "{{ digital_ocean_ssh_key_ids }}"
+    ssh_key_ids: "{{ ssh_keys|json_query('json.ssh_keys[*].id') }}"
     name: "swarm-{{ swarm_name }}.{{ item }}.{{ swarm_region }}"
     size_id: "{{ swarm_droplet_size }}"
     region_id: "{{ swarm_region }}"

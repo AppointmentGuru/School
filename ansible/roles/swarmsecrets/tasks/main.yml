@@ -1,0 +1,36 @@
+---
+- name: Create secrets
+  shell: 'echo "{{item.value}}" | docker secret create {{item.name}} -'
+  with_items: "{{secrets|default([])}}"
+  run_once: yes
+  become: yes
+  register: secret_result
+  ignore_errors: yes
+  # failed_when: 'secret_result.stderr != "" or "code = 6" not in secret_result.stderr'
+
+# requires 2.4
+# - name: Create secrets
+#   docker_secret:
+#     name: "{{item.name}}"
+#     data: "{{item.value}}"
+#     state: present
+#   with_items: "{{secrets|default([])}}"
+#   run_once: yes
+#   become: yes
+
+# - name: Remove secrets
+#   shell: 'docker secret rm {{item}} -'
+#   with_items: "{{remove_secrets|default([])}"
+#   run_once: yes
+#   become: yes
+#   register: rm_secret_result
+
+
+- name: Show secrets available
+  shell: "docker secret ls"
+  become: yes
+  run_once: yes
+  register: secret_ls
+
+- debug: var=secret_ls
+
