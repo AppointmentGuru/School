@@ -1,5 +1,5 @@
 ---
-swarm_droplet_image: docker
+swarm_droplet_image: ubuntu-16-04-x64
 swarm_droplet_size: 1gb
 swarm_private_networking: yes
 swarm_region: fra1

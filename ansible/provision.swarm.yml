@@ -31,6 +31,20 @@
   tasks:
     - meta: refresh_inventory
 
+- name: Install Docker
+  become: yes
+  become_method: sudo
+  hosts:
+    - harden
+  vars:
+    pip_install_packages:
+      - name: docker
+  roles:
+    - role: geerlingguy.pip
+      tags: ['install_docker']
+    - role: geerlingguy.docker
+      tags: ['install_docker']
+
 - name: Install swarm
   become: yes
   become_method: sudo
