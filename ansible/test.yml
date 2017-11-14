@@ -1,9 +1,15 @@
-- hosts: server_swarm
+- hosts: localhost
   tasks:
-    - command: "docker info --format '{%raw%}{{json .Swarm.ControlAvailable}}'{%endraw%}"
-      register: result
-      become: true
-    - debug: msg='Add tag manager'
-      when: result.stdout == 'true'
-    - debug: msg='Remove tag manager'
-      when: result.stdout != 'true'
+    - name: get the install script
+      get_url:
+        url: https://agent.digitalocean.com/install.sh
+        dest: ./do-monitoring-install.sh
+        validate_certs: no
+    # - command: "docker info --format '{%raw%}{{json .Swarm.ControlAvailable}}'{%endraw%}"
+    #   register: result
+    #   become: true
+    # - debug: msg='Add tag manager'
+    #   when: result.stdout == 'true'
+    # - debug: msg='Remove tag manager'
+    #   when: result.stdout != 'true'
+

@@ -1,0 +1,10 @@
+---
+- name: get the install script
+  get_url:
+    url: https://agent.digitalocean.com/install.sh
+    dest: ./do-monitoring-install.sh
+    validate_certs: no
+  become: yes
+- name: install DO monitoring
+  script: ./do-monitoring-install.sh
+  become: yes
