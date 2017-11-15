@@ -1,0 +1,32 @@
+- name: Prepare the node to be removed
+  hosts: server_swarm_manager
+  vars_prompt:
+  - name: swarm_node_id
+    prompt: What is the swarm id of the node to remove
+    private: no
+  tasks:
+  - name: Prepare to leave
+    command: "{{item}}"
+    with_items:
+      - "docker node update --availability drain {{swarm_node_id}}"
+      - "docker node demote {{swarm_node_id}}"
+    run_once: true
+    become: true
+
+# - name: Leave the swarm
+#   hosts: server_swarm
+#   tasks:
+#   - name: Leave the swarm
+#     command: docker swarm leave
+#     delegate_to: "{{node_to_delete}}"
+
+# - name: Prepare the node to be removed
+#   hosts: server_swarm_manager
+#   - name: Remove the node
+#     command: "docker node rm {{swarm_node_id}}"
+#     run_once: true
+#     delegate_to: "server_swarm_manager"
+
+#   - name: Delete the droplet
+#     debug:
+#       msg: todo

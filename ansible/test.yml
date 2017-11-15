@@ -1,10 +1,14 @@
 - hosts: localhost
   tasks:
-    - name: get the install script
-      get_url:
-        url: https://agent.digitalocean.com/install.sh
-        dest: ./do-monitoring-install.sh
-        validate_certs: no
+    - name: install python name script
+      pip:
+        name: petname
+        state: present
+    - name: get a name
+      command: petname --words 3
+      register: petname
+    - debug: var=petname.stdout
+
     # - command: "docker info --format '{%raw%}{{json .Swarm.ControlAvailable}}'{%endraw%}"
     #   register: result
     #   become: true
