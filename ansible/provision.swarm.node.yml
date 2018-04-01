@@ -6,7 +6,7 @@
   hosts:
    - localhost
   vars:
-    swarm_droplet_size: 2gb
+    swarm_droplet_size: 4gb
   vars_prompt:
   - name: swarm_name
     prompt: What is the name of your swarm
@@ -15,7 +15,7 @@
   - name: swarm_nodes
     prompt: 'How many nodes should be in your swarm'
     private: no
-    default: 3
+    default: 1
   roles:
     - role: swarmdroplet
 

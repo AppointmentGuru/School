@@ -19,7 +19,7 @@ services:
 {% endfor %}
   {{docker_service}}_backup:
     image: appointmentguru/pgbackups
-    command: sh /backup.sh
+    command: sh backup.sh
     networks:
       - kong
     deploy:
